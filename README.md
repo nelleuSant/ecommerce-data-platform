@@ -68,6 +68,8 @@ Diferente da arquitetura original do curso (que utilizava Airflow + Snowflake), 
 
 ## ⭐ Modelo Estrela
 
+![Modelo Estrela](docs/images/estrela.png)
+
 A modelagem dimensional foi construída a partir do modelo transacional.
 
 ### 🔹 Fato
