@@ -1,0 +1,10 @@
+
+analyses/
+logs/
+macros/
+seeds/
+snapshots/
+snapshots/
+target/
+tests/
+

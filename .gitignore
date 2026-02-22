@@ -5,9 +5,15 @@
 __pycache__/
 *.pyc
 
-# dbt
-target/
-dbt_packages/
 
 # OS
 .DS_Store
+
+# duckdb
+warehouse.duckdb
+
+# dbt
+.dbt/
+
+# logs
+logs/

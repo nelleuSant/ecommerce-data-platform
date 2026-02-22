@@ -1,57 +1,95 @@
 # Ecommerce Data Platform
 
-## 📌 Visão Geral
+## 🚗 Projeto Data Platform – Vendas de Concessionária
 
-Este projeto simula a construção de uma plataforma moderna de dados para uma empresa de e-commerce utilizando ferramentas open source.
+Este projeto simula uma arquitetura moderna de Engenharia de Dados inspirada no curso:
 
-O objetivo é implementar uma arquitetura completa de Engenharia de Dados, contemplando ingestão, orquestração, transformação e disponibilização de dados para análise.
+Bootcamp Engenharia de Dados: **Construa um Projeto Real**
 
----
+Instrutor: **Fernando Amaral**
 
-## 🏗 Arquitetura
+A proposta foi reproduzir a arquitetura do curso utilizando ferramentas open-source, adaptando o Data Warehouse para um ambiente local e controlado.
 
-A solução segue o padrão ELT (Extract, Load, Transform):
 
-PostgreSQL (OLTP - Camada Raw)  
-→ Airflow (Orquestração - em construção)  
-→ DuckDB (Data Warehouse Analítico - em construção)  
-→ dbt (Transformações - em construção)  
-→ Camada de BI (Dashboards - em construção)
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## 🎯 Objetivo
 
-- Docker
-- PostgreSQL
-- Apache Airflow (planejado)
-- DuckDB (planejado)
-- dbt (planejado)
-- Git & GitHub
+Construir uma arquitetura ELT completa que:
+
+- Extraia dados de um banco transacional PostgreSQL
+- Carregue para um Data Warehouse
+- Transforme os dados com dbt
+- Modele um esquema estrela
+- Implemente testes de qualidade
+- Prepare os dados para consumo analítico (BI)
 
 ---
 
-## 📂 Estrutura do Projeto
+##  🏗️ Arquitetura do Projeto
 
-```
-ecommerce-data-platform/
-│
-├── docker-compose.yml
-├── .env (ignorado pelo Git)
-├── .gitignore
-└── README.md
-```
+### 📦 Fonte (OLTP)
+
+- PostgreSQL (base relacional normalizada)
+- Modelo altamente normalizado (3FN)
+
+### 🧠 Data Warehouse (OLAP)
+
+- DuckDB como engine analítica
+- Camada Staging
+- Camada Marts (modelo estrela)
+
+### 🔄 Transformação
+
+- dbt rodando em container Docker
+- Modelos organizados em:
+    - `staging`
+    - `marts`
+
+
 ---
 
-## 🚀 Status Atual
+## 🔁 Fluxo ELT
 
-✅ Ambiente Docker configurado  
-✅ PostgreSQL rodando em container  
-✅ Schema transacional (raw) criado  
-⏳ Integração com Airflow  
-⏳ Criação da camada analítica (DuckDB)  
-⏳ Transformações com dbt  
-⏳ Construção de dashboards  
+PostgreSQL
+
+- DuckDB (Staging via postgres_scan)
+-  dbt transforma
+-  Modelo Estrela
+-  Consumo BI
+
+Diferente da arquitetura original do curso (que utilizava Airflow + Snowflake), neste projeto:
+
+- A carga foi feita diretamente via `postgres_scan`
+- O foco foi simplificar a arquitetura mantendo os conceitos fundamentais
+
+---
+
+## ⭐ Modelo Estrela
+
+A modelagem dimensional foi construída a partir do modelo transacional.
+
+### 🔹 Fato
+
+`fact_vendas`
+
+- venda_key
+- cliente_key
+- vendedor_key
+- veiculo_key
+- concessionaria_key
+- date_key
+- valor_pago
+
+### 🔹 Dimensões
+
+- dim_clientes
+- dim_vendedores
+- dim_veiculos
+- dim_concessionarias
+
+A dimensão de estado não foi criada separadamente, pois as informações geográficas foram incorporadas nas dimensões principais (desnormalização controlada para análise).
 
 ---
 
@@ -61,18 +99,67 @@ Credenciais sensíveis são armazenadas em arquivo `.env`, que não é versionad
 
 ---
 
-## 📈 Próximos Passos
+## 🧪 Testes Implementados
 
-- Implementar DAGs no Airflow para ingestão de dados
-- Criar modelo dimensional (Star Schema) na camada analítica
-- Implementar transformações e testes com dbt
-- Construir dashboard com ferramenta open source
-- Implementar validações de qualidade de dados
-- Estruturar pipeline com boas práticas de versionamento
+Foram aplicados testes com dbt:
+
+- `unique`
+- `not_null`
+
+Isso garante:
+
+- Integridade das chaves primárias
+- Integridade referencial
+- Confiabilidade analítica
 
 ---
 
-## 👩‍💻 Autora
+##  🛠️ Stack Utilizada
 
-Suellen Souza  
-Projeto de Portfólio em Engenharia de Dados
+- PostgreSQL
+- DuckDB
+- dbt
+- Docker
+- DBeaver (visualização)
+
+---
+
+## 🧠 Decisões Técnicas
+
+### Por que DuckDB?
+
+- Open-source
+- Leve
+- Permite leitura federada via `postgres_scan`
+
+### Por que dbt?
+
+- Versionamento de transformações
+- Separação clara entre staging e marts
+- Testes integrados
+- Padrão de mercado para transformação ELT
+
+### Por que simplificar (sem Airflow)?
+
+A arquitetura original utilizava Airflow para orquestração.
+Neste projeto, optou-se por focar na modelagem e transformação antes de adicionar complexidade de orquestração.
+
+Airflow pode ser integrado em uma próxima versão do projeto.
+
+---
+
+## 📈 Próximos Passos
+
+- Integração com ferramenta de BI open-source
+- Orquestração com Airflow
+- Implementação de incremental models
+- Criação de documentação automática com `dbt docs`
+
+---
+
+## 📚 Referência
+
+Projeto inspirado no curso:
+
+Bootcamp Engenharia de Dados: Construa um Projeto Real
+Instrutor: Fernando Amaral
